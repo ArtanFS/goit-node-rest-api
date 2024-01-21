@@ -1,13 +1,13 @@
 import { readFile, writeFile } from "fs/promises";
 import { join } from "path";
-import { v4 as uuidv4 } from "uuid";
+import { v4 } from "uuid";
 
 const contactsPath = join(process.cwd(), "db", "contacts.json");
 
 async function listContacts() {
   try {
     const readData = await readFile(contactsPath);
-    return await JSON.parse(readData);
+    return JSON.parse(readData);
   } catch (err) {
     console.log(err.message);
   }
@@ -43,7 +43,7 @@ async function addContact(name, email, phone) {
   try {
     const dataArr = await listContacts();
     const contact = {
-      id: uuidv4(),
+      id: v4(),
       name,
       email,
       phone,
