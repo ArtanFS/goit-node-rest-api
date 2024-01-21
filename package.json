@@ -1,6 +1,9 @@
 {
   "name": "goit-node-rest-api",
   "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "scripts": {
     "start": "node ./app.js",
     "dev": "nodemon ./app.js"

@@ -10,6 +10,7 @@ async function listContacts() {
     return JSON.parse(readData);
   } catch (err) {
     console.log(err.message);
+    // return err;
   }
 }
 
@@ -56,4 +57,27 @@ async function addContact(name, email, phone) {
   }
 }
 
-export default { listContacts, getContactById, removeContact, addContact };
+async function updateContact(contactId, updContact) {
+  try {
+    const dataArr = await listContacts();
+    const contactIdx = dataArr.findIndex((contact) => contact.id === contactId);
+    if (contactIdx >= 0) {
+      dataArr[contactIdx].name = updContact.name || dataArr[contactIdx].name;
+      dataArr[contactIdx].email = updContact.email || dataArr[contactIdx].email;
+      dataArr[contactIdx].phone = updContact.phone || dataArr[contactIdx].phone;
+      await writeFile(contactsPath, JSON.stringify(dataArr));
+      return dataArr[contactIdx];
+    }
+    return null;
+  } catch (err) {
+    console.log(err.message);
+  }
+}
+
+export default {
+  listContacts,
+  getContactById,
+  removeContact,
+  addContact,
+  updateContact,
+};
