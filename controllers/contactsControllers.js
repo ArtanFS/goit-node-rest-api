@@ -5,17 +5,23 @@ export const getAllContacts = async (req, res) => {
   res.status(200).json(result);
 };
 
-export const getOneContact = async (req, res, next) => {
+export const getOneContact = async (req, res) => {
   const { id } = req.params;
   const result = await contactsService.getContactById(id);
-  console.log(result);
   !result
-    ? next() // res.status(404).json({ message: "Not found" })
-    : //
+    ? res.status(404).json({ message: "Not found" })
+    : //next()
       res.status(200).json(result);
 };
 
-export const deleteContact = (req, res) => {};
+export const deleteContact = async (req, res) => {
+  const { id } = req.params;
+  const result = await contactsService.removeContact(id);
+  !result
+    ? res.status(404).json({ message: "Not found" })
+    : //next()
+      res.status(200).json(result);
+};
 
 export const createContact = (req, res) => {};
 
