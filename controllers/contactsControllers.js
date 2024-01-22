@@ -8,25 +8,24 @@ import contactsService from "../services/contactsServices.js";
 
 export const getAllContacts = async (req, res, next) => {
   const result = await contactsService.listContacts();
-  res.status(200).json(result);
+  if (Array.isArray(result)) res.status(200).json(result);
+  else next(HttpError(500, result));
 };
 
-export const getOneContact = async (req, res) => {
+export const getOneContact = async (req, res, next) => {
   const { id } = req.params;
   const result = await contactsService.getContactById(id);
-  !result
-    ? res.status(404).json({ message: "Not found" })
-    : //next()
-      res.status(200).json(result);
+  if (typeof result === "object")
+    !result ? next(HttpError(404, "Not found")) : res.status(200).json(result);
+  else next(HttpError(500, result));
 };
 
-export const deleteContact = async (req, res) => {
+export const deleteContact = async (req, res, next) => {
   const { id } = req.params;
   const result = await contactsService.removeContact(id);
-  !result
-    ? res.status(404).json({ message: "Not found" })
-    : //next()
-      res.status(200).json(result);
+  if (typeof result === "object")
+    !result ? next(HttpError(404, "Not found")) : res.status(200).json(result);
+  else next(HttpError(500, result));
 };
 
 export const createContact = async (req, res, next) => {

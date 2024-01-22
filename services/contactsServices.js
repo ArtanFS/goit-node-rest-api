@@ -7,26 +7,27 @@ const contactsPath = join(process.cwd(), "db", "contacts.json");
 async function listContacts() {
   try {
     const readData = await readFile(contactsPath);
-    return JSON.parse(readData);
+    return await JSON.parse(readData);
   } catch (err) {
-    console.log(err.message);
-    // return err;
+    return err.message;
   }
 }
 
 async function getContactById(contactId) {
   try {
-    const dataArr = await listContacts();
+    const readData = await readFile(contactsPath);
+    const dataArr = await JSON.parse(readData);
     const contact = dataArr.find((contact) => contact.id === contactId);
     return contact || null;
   } catch (err) {
-    console.log(err.message);
+    return err.message;
   }
 }
 
 async function removeContact(contactId) {
   try {
-    const dataArr = await listContacts();
+    const readData = await readFile(contactsPath);
+    const dataArr = await JSON.parse(readData);
     const contactIdx = dataArr.findIndex((contact) => contact.id === contactId);
     if (contactIdx >= 0) {
       const contact = dataArr[contactIdx];
@@ -36,7 +37,7 @@ async function removeContact(contactId) {
     }
     return null;
   } catch (err) {
-    console.log(err.message);
+    return err.message;
   }
 }
 
