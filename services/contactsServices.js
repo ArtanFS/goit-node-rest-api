@@ -61,7 +61,8 @@ async function addContact(name, email, phone) {
 
 async function updateContact(contactId, updContact) {
   try {
-    const dataArr = await listContacts();
+    const readData = await readFile(contactsPath);
+    const dataArr = await JSON.parse(readData);
     const contactIdx = dataArr.findIndex((contact) => contact.id === contactId);
     if (contactIdx >= 0) {
       dataArr[contactIdx].name = updContact.name || dataArr[contactIdx].name;
@@ -72,7 +73,7 @@ async function updateContact(contactId, updContact) {
     }
     return null;
   } catch (err) {
-    console.log(err.message);
+    return err.message;
   }
 }
 
