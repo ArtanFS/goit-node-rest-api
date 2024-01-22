@@ -13,7 +13,7 @@ export const createContactSchema = Joi.object({
     .length(10)
     .pattern(/^[0-9]+$/)
     .required(),
-});
+}).options({ abortEarly: false });
 
 export const updateContactSchema = Joi.object({
   name: Joi.string()
@@ -26,4 +26,4 @@ export const updateContactSchema = Joi.object({
     .trim()
     .length(10)
     .pattern(/^[0-9]+$/),
-});
+}).options({ abortEarly: false });

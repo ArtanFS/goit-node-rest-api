@@ -9,14 +9,12 @@ import {
 
 const contactsRouter = express.Router();
 
-contactsRouter.get("/", getAllContacts);
+contactsRouter.route("/").get(getAllContacts).post(createContact);
 
-contactsRouter.get("/:id", getOneContact);
-
-contactsRouter.delete("/:id", deleteContact);
-
-contactsRouter.post("/", createContact);
-
-contactsRouter.put("/:id", updateContact);
+contactsRouter
+  .route("/:id")
+  .get(getOneContact)
+  .delete(deleteContact)
+  .put(updateContact);
 
 export default contactsRouter;
