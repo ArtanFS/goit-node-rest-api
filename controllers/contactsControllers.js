@@ -35,7 +35,8 @@ export const createContact = async (req, res, next) => {
   }
   const { name, email, phone } = value;
   const result = await contactsService.addContact(name, email, phone);
-  res.status(200).json(result);
+  if (typeof result === "object") res.status(201).json(result);
+  else next(HttpError(500, result));
 };
 
 export const updateContact = async (req, res, next) => {

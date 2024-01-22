@@ -43,7 +43,8 @@ async function removeContact(contactId) {
 
 async function addContact(name, email, phone) {
   try {
-    const dataArr = await listContacts();
+    const readData = await readFile(contactsPath);
+    const dataArr = await JSON.parse(readData);
     const contact = {
       id: v4(),
       name,
@@ -54,7 +55,7 @@ async function addContact(name, email, phone) {
     await writeFile(contactsPath, JSON.stringify(dataArr));
     return contact;
   } catch (err) {
-    console.log(err.message);
+    return err.message;
   }
 }
 
