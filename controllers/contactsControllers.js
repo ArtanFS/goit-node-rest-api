@@ -1,17 +1,16 @@
 import HttpError from '../helpers/HttpError.js';
+import { catchAsync } from '../helpers/catchAsync.js';
 import {
   createContactSchema,
   updateContactSchema,
 } from '../schemas/contactsSchemas.js';
 import contactsService from '../services/contactsServices.js';
+import { Contact } from '../models/contactModel.js';
 
-export const getAllContacts = async (req, res, next) => {
-  const result = await contactsService.listContacts();
-
-  Array.isArray(result)
-    ? res.status(200).json(result)
-    : next(HttpError(500, result));
-};
+export const getAllContacts = catchAsync(async (req, res) => {
+  const contacts = await Contact.find();
+  res.status(200).json(contacts);
+});
 
 export const getOneContact = async (req, res, next) => {
   const { id } = req.params;
