@@ -1,8 +1,8 @@
-import { readFile, writeFile } from "fs/promises";
-import { join } from "path";
-import { v4 } from "uuid";
+import { readFile, writeFile } from 'fs/promises';
+import { join } from 'path';
+import { v4 } from 'uuid';
 
-const contactsPath = join(process.cwd(), "db", "contacts.json");
+const contactsPath = join(process.cwd(), 'db', 'contacts.json');
 
 async function listContacts() {
   try {
@@ -17,7 +17,7 @@ async function getContactById(contactId) {
   try {
     const readData = await readFile(contactsPath);
     const dataArr = await JSON.parse(readData);
-    const contact = dataArr.find((contact) => contact.id === contactId);
+    const contact = dataArr.find(contact => contact.id === contactId);
     return contact || null;
   } catch (err) {
     return err.message;
@@ -28,7 +28,7 @@ async function removeContact(contactId) {
   try {
     const readData = await readFile(contactsPath);
     const dataArr = await JSON.parse(readData);
-    const contactIdx = dataArr.findIndex((contact) => contact.id === contactId);
+    const contactIdx = dataArr.findIndex(contact => contact.id === contactId);
     if (contactIdx >= 0) {
       const contact = dataArr[contactIdx];
       dataArr.splice(contactIdx, 1);
@@ -63,7 +63,7 @@ async function updateContact(contactId, updContact) {
   try {
     const readData = await readFile(contactsPath);
     const dataArr = await JSON.parse(readData);
-    const contactIdx = dataArr.findIndex((contact) => contact.id === contactId);
+    const contactIdx = dataArr.findIndex(contact => contact.id === contactId);
     if (contactIdx >= 0) {
       dataArr[contactIdx].name = updContact.name || dataArr[contactIdx].name;
       dataArr[contactIdx].email = updContact.email || dataArr[contactIdx].email;
