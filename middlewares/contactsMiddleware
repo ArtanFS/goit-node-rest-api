@@ -1,23 +1,15 @@
-// import { catchAsync, HttpError } from '../utils/index.js';
+import { HttpError } from '../helpers/HttpError.js';
 import { catchAsync } from '../helpers/catchAsync.js';
+import {
+  createContactSchema,
+  updateContactSchema,
+} from '../schemas/contactsSchemas.js';
 // import {
 // createUserDataValidator,
 // updateUserDataValidator,
 // } from '../utils/userValidators.js';
 // import { userService } from '../services/index.js';
 import contactsServices from '../services/contactsServices.js';
-
-// export const checkCreateUserData = catchAsync(async (req, res, next) => {
-// const { value, error } = createUserDataValidator(req.body);
-
-// if (error) throw new HttpError(400, 'Invalid user data..', error);
-
-// await userService.checkUserExists({ email: value.email });
-
-// req.body = value;
-
-// next();
-// });
 
 // export const checkUpdateUserData = catchAsync(async (req, res, next) => {
 // if (!Object.keys(req.body).length)
@@ -38,8 +30,20 @@ import contactsServices from '../services/contactsServices.js';
 // });
 
 export const checkUserId = catchAsync(async (req, res, next) => {
-  console.log(req.params.id);
   await contactsServices.checkUserId(req.params.id);
+  next();
+});
+
+export const checkCreateUserData = catchAsync(async (req, res, next) => {
+  const { value, error } = createContactSchema.validate(req.body);
+
+  if (error) throw new HttpError(400, error.message);
+
+  await contactsServices.checkUserExists({
+    $or: [{ email: value.email }, { phone: value.phone }],
+  });
+
+  req.body = value;
 
   next();
 });

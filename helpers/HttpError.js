@@ -6,9 +6,11 @@ const messageList = {
   409: 'Conflict',
 };
 
-export default class HttpError extends Error {
+class HttpError extends Error {
   constructor(status, message = messageList[status]) {
     super(message);
     this.status = status;
   }
 }
+
+export { HttpError };

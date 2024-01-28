@@ -15,24 +15,15 @@ export const getOneContact = catchAsync(async (req, res) => {
   res.status(200).json(contact);
 });
 
-export const deleteContact = async (req, res) => {
+export const deleteContact = catchAsync(async (req, res) => {
   const result = await contactsService.removeContact(req.params.id);
   res.status(200).json(result);
-};
+});
 
-export const createContact = async (req, res, next) => {
-  const { value, error } = createContactSchema.validate(req.body);
-
-  // if (error) return next(HttpError(400, error.message));
-
-  const { name, email, phone } = value;
-  const result = await contactsService.addContact(name, email, phone);
-
-  typeof result === 'object'
-    ? res.status(201).json(result)
-    : // : next(HttpError(500, result));
-      5;
-};
+export const createContact = catchAsync(async (req, res, next) => {
+  const newContact = await contactsService.addContact(req.body);
+  res.status(201).json(newContact);
+});
 
 export const updateContact = async (req, res, next) => {
   const { value, error } = updateContactSchema.validate(req.body);

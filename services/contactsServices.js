@@ -1,9 +1,9 @@
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { v4 } from 'uuid';
-import { Contact } from '../models/contactModel.js';
 import { Types } from 'mongoose';
-import HttpError from '../helpers/HttpError.js';
+import { Contact } from '../models/contactModel.js';
+import { HttpError } from '../helpers/HttpError.js';
 
 const contactsPath = join(process.cwd(), 'db', 'contacts.json');
 
@@ -13,23 +13,25 @@ const getContactById = contactId => Contact.findById(contactId);
 
 const removeContact = contactId => Contact.findByIdAndDelete(contactId);
 
-async function addContact(name, email, phone) {
-  try {
-    const readData = await readFile(contactsPath);
-    const dataArr = await JSON.parse(readData);
-    const contact = {
-      id: v4(),
-      name,
-      email,
-      phone,
-    };
-    dataArr.push(contact);
-    await writeFile(contactsPath, JSON.stringify(dataArr));
-    return contact;
-  } catch (err) {
-    return err.message;
-  }
-}
+const addContact = contactData => Contact.create(contactData);
+
+//   {
+//   try {
+//     const readData = await readFile(contactsPath);
+//     const dataArr = await JSON.parse(readData);
+//     const contact = {
+//       id: v4(),
+//       name,
+//       email,
+//       phone,
+//     };
+//     dataArr.push(contact);
+//     await writeFile(contactsPath, JSON.stringify(dataArr));
+//     return contact;
+//   } catch (err) {
+//     return err.message;
+//   }
+// };
 
 async function updateContact(contactId, updContact) {
   try {
@@ -59,6 +61,11 @@ const checkUserId = async contactId => {
   if (!contactExists) throw new HttpError(404, 'Not found');
 };
 
+const checkUserExists = async filter => {
+  const contactExists = await Contact.exists(filter);
+  if (contactExists) throw new HttpError(409, 'User already exists');
+};
+
 export default {
   listContacts,
   getContactById,
@@ -66,4 +73,5 @@ export default {
   addContact,
   updateContact,
   checkUserId,
+  checkUserExists,
 };

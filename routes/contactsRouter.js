@@ -6,11 +6,17 @@ import {
   getOneContact,
   updateContact,
 } from '../controllers/contactsControllers.js';
-import { checkUserId } from '../middlewares/contactsMiddleware';
+import {
+  checkUserId,
+  checkCreateUserData,
+} from '../middlewares/contactsMiddleware';
 
 const contactsRouter = Router();
 
-contactsRouter.route('/').get(getAllContacts).post(createContact);
+contactsRouter
+  .route('/')
+  .get(getAllContacts)
+  .post(checkCreateUserData, createContact);
 
 contactsRouter.use('/:id', checkUserId);
 
