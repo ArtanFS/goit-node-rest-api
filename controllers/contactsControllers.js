@@ -1,11 +1,9 @@
-import HttpError from '../helpers/HttpError.js';
 import { catchAsync } from '../helpers/catchAsync.js';
 import {
   createContactSchema,
   updateContactSchema,
 } from '../schemas/contactsSchemas.js';
 import contactsService from '../services/contactsServices.js';
-import { Contact } from '../models/contactModel.js';
 
 export const getAllContacts = catchAsync(async (req, res) => {
   const contacts = await contactsService.listContacts();
@@ -17,26 +15,9 @@ export const getOneContact = catchAsync(async (req, res) => {
   res.status(200).json(contact);
 });
 
-// export const getOneContact = async (req, res, next) => {
-//   const contact = await Contact.findById(req.params.id);
-
-//   // const { id } = req.params;
-//   // const result = await contactsService.getContactById(id);
-
-//   if (typeof result !== 'object') next(HttpError(500, 'Server error'));
-//   // !result ? next(HttpError(404, 'Not found')) : res.status(200).json(result);
-//   res.status(200).json(contact);
-//   // else next(HttpError(500, result));
-// };
-
-export const deleteContact = async (req, res, next) => {
-  const { id } = req.params;
-  const result = await contactsService.removeContact(id);
-
-  if (typeof result === 'object')
-    // !result ? throw new HttpError(404, 'Not found') : res.status(200).json(result);
-    // else throw new HttpError(500, result);
-    console.log(result);
+export const deleteContact = async (req, res) => {
+  const result = await contactsService.removeContact(req.params.id);
+  res.status(200).json(result);
 };
 
 export const createContact = async (req, res, next) => {

@@ -9,35 +9,9 @@ const contactsPath = join(process.cwd(), 'db', 'contacts.json');
 
 const listContacts = () => Contact.find();
 
-const getContactById = contactId => Contact.findById(contactId) || null;
+const getContactById = contactId => Contact.findById(contactId);
 
-// async function getContactById(contactId) {
-//   try {
-//     const readData = await readFile(contactsPath);
-//     const dataArr = await JSON.parse(readData);
-//     const contact = dataArr.find(contact => contact.id === contactId);
-//     return contact || null;
-//   } catch (err) {
-//     return err.message;
-//   }
-// }
-
-async function removeContact(contactId) {
-  try {
-    const readData = await readFile(contactsPath);
-    const dataArr = await JSON.parse(readData);
-    const contactIdx = dataArr.findIndex(contact => contact.id === contactId);
-    if (contactIdx >= 0) {
-      const contact = dataArr[contactIdx];
-      dataArr.splice(contactIdx, 1);
-      await writeFile(contactsPath, JSON.stringify(dataArr));
-      return contact;
-    }
-    return null;
-  } catch (err) {
-    return err.message;
-  }
-}
+const removeContact = contactId => Contact.findByIdAndDelete(contactId);
 
 async function addContact(name, email, phone) {
   try {
