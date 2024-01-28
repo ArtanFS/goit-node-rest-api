@@ -1,28 +1,26 @@
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { v4 } from 'uuid';
+import { Contact } from '../models/contactModel.js';
+import { Types } from 'mongoose';
+import HttpError from '../helpers/HttpError.js';
 
 const contactsPath = join(process.cwd(), 'db', 'contacts.json');
 
-async function listContacts() {
-  try {
-    const readData = await readFile(contactsPath);
-    return await JSON.parse(readData);
-  } catch (err) {
-    return err.message;
-  }
-}
+const listContacts = () => Contact.find();
 
-async function getContactById(contactId) {
-  try {
-    const readData = await readFile(contactsPath);
-    const dataArr = await JSON.parse(readData);
-    const contact = dataArr.find(contact => contact.id === contactId);
-    return contact || null;
-  } catch (err) {
-    return err.message;
-  }
-}
+const getContactById = contactId => Contact.findById(contactId) || null;
+
+// async function getContactById(contactId) {
+//   try {
+//     const readData = await readFile(contactsPath);
+//     const dataArr = await JSON.parse(readData);
+//     const contact = dataArr.find(contact => contact.id === contactId);
+//     return contact || null;
+//   } catch (err) {
+//     return err.message;
+//   }
+// }
 
 async function removeContact(contactId) {
   try {
@@ -77,10 +75,21 @@ async function updateContact(contactId, updContact) {
   }
 }
 
+const checkUserId = async contactId => {
+  const isIdValid = Types.ObjectId.isValid(contactId);
+
+  if (!isIdValid) throw new HttpError(404, 'Not found');
+
+  const contactExists = await Contact.exists({ _id: contactId });
+
+  if (!contactExists) throw new HttpError(404, 'Not found');
+};
+
 export default {
   listContacts,
   getContactById,
   removeContact,
   addContact,
   updateContact,
+  checkUserId,
 };
