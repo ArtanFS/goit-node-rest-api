@@ -13,6 +13,8 @@ const contactSchema = new Schema(
     },
     phone: {
       type: String,
+      required: true,
+      unique: true,
     },
     favorite: {
       type: Boolean,
@@ -20,7 +22,6 @@ const contactSchema = new Schema(
     },
   },
   {
-    timestamps: true,
     versionKey: false,
   }
 );
