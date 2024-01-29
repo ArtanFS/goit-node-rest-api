@@ -11,13 +11,9 @@ const removeContact = (contactId) => Contact.findByIdAndDelete(contactId);
 const addContact = (contactData) => Contact.create(contactData);
 
 const updateContact = async (contactId, contactData) => {
-  const updatedContact = await Contact.findByIdAndUpdate(
-    contactId,
-    contactData,
-    {
-      new: true,
-    }
-  );
+  const updatedContact = await Contact.findByIdAndUpdate(contactId, contactData, {
+    new: true,
+  });
   return updatedContact;
 };
 

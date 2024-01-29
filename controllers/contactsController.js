@@ -22,9 +22,6 @@ export const createContact = catchAsync(async (req, res) => {
 });
 
 export const updateContact = catchAsync(async (req, res) => {
-  const updatedContact = await contactsService.updateContact(
-    req.params.id,
-    req.body
-  );
+  const updatedContact = await contactsService.updateContact(req.params.id, req.body);
   res.status(200).json(updatedContact);
 });

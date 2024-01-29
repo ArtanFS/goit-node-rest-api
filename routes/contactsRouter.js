@@ -15,6 +15,7 @@ import validateBody from '../helpers/validateBody.js';
 import {
   createContactSchema,
   updateContactSchema,
+  updateStatusSchema,
 } from '../schemas/contactsSchema.js';
 
 const contactsRouter = Router();
@@ -31,5 +32,7 @@ contactsRouter
   .get(getOneContact)
   .delete(deleteContact)
   .put(validateBody(updateContactSchema), checkUpdateUserData, updateContact);
+
+contactsRouter.route('/:id/favorite').patch(validateBody(updateStatusSchema), updateContact);
 
 export default contactsRouter;
