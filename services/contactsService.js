@@ -4,11 +4,11 @@ import HttpError from '../helpers/HttpError.js';
 
 const listContacts = () => Contact.find();
 
-const getContactById = contactId => Contact.findById(contactId);
+const getContactById = (contactId) => Contact.findById(contactId);
 
-const removeContact = contactId => Contact.findByIdAndDelete(contactId);
+const removeContact = (contactId) => Contact.findByIdAndDelete(contactId);
 
-const addContact = contactData => Contact.create(contactData);
+const addContact = (contactData) => Contact.create(contactData);
 
 const updateContact = async (contactId, contactData) => {
   const updatedContact = await Contact.findByIdAndUpdate(
@@ -21,7 +21,7 @@ const updateContact = async (contactId, contactData) => {
   return updatedContact;
 };
 
-const checkUserId = async contactId => {
+const checkUserId = async (contactId) => {
   const isIdValid = Types.ObjectId.isValid(contactId);
   if (!isIdValid) throw HttpError(404, 'Not found');
 
@@ -29,7 +29,7 @@ const checkUserId = async contactId => {
   if (!contactExists) throw HttpError(404, 'Not found');
 };
 
-const checkUserExists = async filter => {
+const checkUserExists = async (filter) => {
   const contactExists = await Contact.exists(filter);
   if (contactExists) throw HttpError(409, 'User already exists');
 };

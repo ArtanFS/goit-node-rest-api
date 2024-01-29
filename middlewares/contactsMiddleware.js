@@ -3,8 +3,7 @@ import catchAsync from '../helpers/catchAsync.js';
 import contactsService from '../services/contactsService.js';
 
 export const checkUpdateUserData = catchAsync(async (req, res, next) => {
-  if (!Object.keys(req.body).length)
-    throw HttpError(400, 'Body must have at least one field');
+  if (!Object.keys(req.body).length) throw HttpError(400, 'Body must have at least one field');
 
   await contactsService.checkUserExists({
     $or: [{ email: req.body.email }, { phone: req.body.phone }],

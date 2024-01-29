@@ -7,9 +7,9 @@ import {
   updateContact,
 } from '../controllers/contactsController.js';
 import {
-  checkUserId,
   checkCreateUserData,
   checkUpdateUserData,
+  checkUserId,
 } from '../middlewares/contactsMiddleware.js';
 import validateBody from '../helpers/validateBody.js';
 import {
