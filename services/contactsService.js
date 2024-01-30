@@ -27,7 +27,7 @@ const checkUserId = async (contactId) => {
 
 const checkUserExists = async (filter) => {
   const contactExists = await Contact.exists(filter);
-  if (contactExists) throw HttpError(409, 'User already exists');
+  if (contactExists) throw HttpError(409, 'User with same email or phone already exists.');
 };
 
 export default {
