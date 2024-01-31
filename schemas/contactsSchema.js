@@ -1,4 +1,4 @@
-import Joi from "joi";
+import Joi from 'joi';
 
 export const createContactSchema = Joi.object({
   name: Joi.string()
@@ -27,3 +27,9 @@ export const updateContactSchema = Joi.object({
     .length(10)
     .pattern(/^[0-9]+$/),
 }).options({ abortEarly: false });
+
+export const updateStatusSchema = Joi.object({
+  favorite: Joi.boolean().required(),
+})
+  .only()
+  .options({ abortEarly: false });
