@@ -7,32 +7,30 @@ import {
   updateContact,
 } from '../controllers/contactsController.js';
 import {
-  checkCreateUserData,
-  checkUpdateUserData,
-  checkUserId,
+  checkContactId,
+  checkCreateContactData,
+  checkUpdateContactData,
 } from '../middlewares/contactsMiddleware.js';
-import validateBody from '../helpers/validateBody.js';
+import { validateBody } from '../helpers/index.js';
 import {
   createContactSchema,
   updateContactSchema,
   updateStatusSchema,
 } from '../schemas/contactsSchema.js';
 
-const contactsRouter = Router();
+export const router = Router();
 
-contactsRouter
+router
   .route('/')
   .get(getAllContacts)
-  .post(validateBody(createContactSchema), checkCreateUserData, createContact);
+  .post(validateBody(createContactSchema), checkCreateContactData, createContact);
 
-contactsRouter.use('/:id', checkUserId);
+router.use('/:id', checkContactId);
 
-contactsRouter
+router
   .route('/:id')
   .get(getOneContact)
   .delete(deleteContact)
-  .put(validateBody(updateContactSchema), checkUpdateUserData, updateContact);
+  .put(validateBody(updateContactSchema), checkUpdateContactData, updateContact);
 
-contactsRouter.route('/:id/favorite').patch(validateBody(updateStatusSchema), updateContact);
-
-export default contactsRouter;
+router.route('/:id/favorite').patch(validateBody(updateStatusSchema), updateContact);

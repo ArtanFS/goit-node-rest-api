@@ -1,23 +1,27 @@
 import { Types } from 'mongoose';
 import { Contact } from '../models/contactsModel.js';
-import HttpError from '../helpers/HttpError.js';
+import { HttpError } from '../helpers/index.js';
 
-const listContacts = () => Contact.find();
+export const listContacts = () => Contact.find();
 
-const getContactById = (contactId) => Contact.findById(contactId);
+export const getContactById = (contactId) => Contact.findById(contactId);
 
-const removeContact = (contactId) => Contact.findByIdAndDelete(contactId);
+export const removeContact = (contactId) => Contact.findByIdAndDelete(contactId);
 
-const addContact = (contactData) => Contact.create(contactData);
+export const addContact = (contactData) => Contact.create(contactData);
 
-const updateContact = async (contactId, contactData) => {
+export const updateContact = async (contactId, contactData) => {
   const updatedContact = await Contact.findByIdAndUpdate(contactId, contactData, {
     new: true,
   });
   return updatedContact;
 };
 
-const checkUserId = async (contactId) => {
+/**
+ *
+ * @param {*} contactId
+ */
+export const checkContactId = async (contactId) => {
   const isIdValid = Types.ObjectId.isValid(contactId);
   if (!isIdValid) throw HttpError(404, 'Not found');
 
@@ -25,17 +29,7 @@ const checkUserId = async (contactId) => {
   if (!contactExists) throw HttpError(404, 'Not found');
 };
 
-const checkUserExists = async (filter) => {
+export const checkContactExists = async (filter) => {
   const contactExists = await Contact.exists(filter);
-  if (contactExists) throw HttpError(409, 'User with same email or phone already exists.');
-};
-
-export default {
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
-  updateContact,
-  checkUserId,
-  checkUserExists,
+  if (contactExists) throw HttpError(409, 'Contact with same email or phone already exists.');
 };
