@@ -2,13 +2,13 @@ import { Router } from 'express';
 import { authMiddleware } from '../middlewares/index.js';
 import { authController } from '../controllers/index.js';
 import { validateBody } from '../helpers/index.js';
-import { registerUserSchema } from '../schemas/index.js';
+import { usersSchema } from '../schemas/index.js';
 
 export const router = Router();
 
 router.post(
   '/register',
-  validateBody(registerUserSchema),
+  validateBody(usersSchema.registerUserSchema),
   authMiddleware.checkRegisterData,
   authController.register
 );

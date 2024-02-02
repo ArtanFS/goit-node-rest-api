@@ -1,2 +1,2 @@
-export * from './contactsSchema.js';
-export * from './usersSchema.js';
+export * as contactsSchema from './contactsSchema.js';
+export * as usersSchema from './usersSchema.js';

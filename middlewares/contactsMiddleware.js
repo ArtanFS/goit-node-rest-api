@@ -13,17 +13,12 @@ export const checkCreateContactData = catchAsync(async (req, res, next) => {
   next();
 });
 
-export const checkUpdateContactData = (req, res, next) => {
+export const checkUpdateContactData = catchAsync(async (req, res, next) => {
   if (!Object.keys(req.body).length) throw HttpError(400, 'Body must have at least one field');
+
+  await contactsService.checkContactExists({
+    $or: [{ email: req.body.email }, { phone: req.body.phone }],
+    _id: { $ne: req.params.id },
+  });
   next();
-};
-
-// export const checkUpdateUserData = catchAsync(async (req, res, next) => {
-//   if (!Object.keys(req.body).length) throw HttpError(400, 'Body must have at least one field');
-
-//   await contactsService.checkUserExists({
-//     $or: [{ email: req.body.email }, { phone: req.body.phone }],
-//     _id: { $ne: req.params.id },
-//   });
-//   next();
-// });
+});

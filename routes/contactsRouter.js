@@ -1,36 +1,32 @@
 import { Router } from 'express';
-import {
-  createContact,
-  deleteContact,
-  getAllContacts,
-  getOneContact,
-  updateContact,
-} from '../controllers/contactsController.js';
-import {
-  checkContactId,
-  checkCreateContactData,
-  checkUpdateContactData,
-} from '../middlewares/contactsMiddleware.js';
+import { contactsController } from '../controllers/index.js';
+import { contactsMiddleware } from '../middlewares/index.js';
 import { validateBody } from '../helpers/index.js';
-import {
-  createContactSchema,
-  updateContactSchema,
-  updateStatusSchema,
-} from '../schemas/contactsSchema.js';
+import { contactsSchema } from '../schemas/index.js';
 
 export const router = Router();
 
 router
   .route('/')
-  .get(getAllContacts)
-  .post(validateBody(createContactSchema), checkCreateContactData, createContact);
+  .get(contactsController.getAllContacts)
+  .post(
+    validateBody(contactsSchema.createContactSchema),
+    contactsMiddleware.checkCreateContactData,
+    contactsController.createContact
+  );
 
-router.use('/:id', checkContactId);
+router.use('/:id', contactsMiddleware.checkContactId);
 
 router
   .route('/:id')
-  .get(getOneContact)
-  .delete(deleteContact)
-  .put(validateBody(updateContactSchema), checkUpdateContactData, updateContact);
+  .get(contactsController.getOneContact)
+  .delete(contactsController.deleteContact)
+  .put(
+    validateBody(contactsSchema.updateContactSchema),
+    contactsMiddleware.checkUpdateContactData,
+    contactsController.updateContact
+  );
 
-router.route('/:id/favorite').patch(validateBody(updateStatusSchema), updateContact);
+router
+  .route('/:id/favorite')
+  .patch(validateBody(contactsSchema.updateStatusSchema), contactsController.updateContact);

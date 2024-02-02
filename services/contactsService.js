@@ -17,10 +17,6 @@ export const updateContact = async (contactId, contactData) => {
   return updatedContact;
 };
 
-/**
- *
- * @param {*} contactId
- */
 export const checkContactId = async (contactId) => {
   const isIdValid = Types.ObjectId.isValid(contactId);
   if (!isIdValid) throw HttpError(404, 'Not found');
@@ -31,5 +27,5 @@ export const checkContactId = async (contactId) => {
 
 export const checkContactExists = async (filter) => {
   const contactExists = await Contact.exists(filter);
-  if (contactExists) throw HttpError(409, 'Contact with same email or phone already exists.');
+  if (contactExists) throw HttpError(409, 'Email or phone in use');
 };
