@@ -12,6 +12,6 @@ router.post(
   authMiddleware.checkRegisterData,
   authController.register
 );
-router.post('/login');
+router.post('/login', validateBody(usersSchema.registerUserSchema), authController.login);
 router.post('/logout');
 router.post('/current');

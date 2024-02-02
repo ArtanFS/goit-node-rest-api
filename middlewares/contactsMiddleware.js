@@ -3,6 +3,7 @@ import { contactsService } from '../services/index.js';
 
 export const checkContactId = catchAsync(async (req, res, next) => {
   await contactsService.checkContactId(req.params.id);
+
   next();
 });
 
@@ -10,6 +11,7 @@ export const checkCreateContactData = catchAsync(async (req, res, next) => {
   await contactsService.checkContactExists({
     $or: [{ email: req.body.email }, { phone: req.body.phone }],
   });
+
   next();
 });
 
@@ -20,5 +22,6 @@ export const checkUpdateContactData = catchAsync(async (req, res, next) => {
     $or: [{ email: req.body.email }, { phone: req.body.phone }],
     _id: { $ne: req.params.id },
   });
+
   next();
 });

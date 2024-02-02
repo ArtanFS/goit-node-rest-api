@@ -1,20 +1,12 @@
 import { jwtService, usersService } from '../services/index.js';
-import { catchAsync, HttpError } from '../helpers/index.js';
+import { catchAsync, HttpError, validateBody } from '../helpers/index.js';
+import { usersSchema } from '../schemas/index.js';
 
 export const checkRegisterData = catchAsync(async (req, res, next) => {
   await usersService.checkUserExists({ email: req.body.email });
+
   next();
 });
-
-// export const checkLoginData = (req, res, next) => {
-//   const { value, error } = loginValidator(req.body);
-
-//   if (error) throw new HttpError(401, 'Not authorized..', error);
-
-//   req.body = value;
-
-//   next();
-// };
 
 // export const protect = catchAsync(async (req, res, next) => {
 //   const token =

@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import { genSalt, hash } from 'bcrypt';
+import { compare, genSalt, hash } from 'bcrypt';
 
 const userSchema = new Schema(
   {
@@ -32,5 +32,7 @@ userSchema.pre('save', async function (next) {
 
   next();
 });
+
+userSchema.methods.checkPassword = (candidate, passwordHash) => compare(candidate, passwordHash);
 
 export const User = model('User', userSchema);

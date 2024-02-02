@@ -12,14 +12,14 @@ export const register = catchAsync(async (req, res) => {
   });
 });
 
-// export const login = catchAsync(async (req, res) => {
-//   const { user, token } = await userService.login(req.body);
+export const login = catchAsync(async (req, res) => {
+  const { user, token } = await usersService.login(req.body);
 
-//   res.status(200).json({
-//     msg: 'Success!',
-//     user,
-//     token,
-//   });
-// });
-
-/** */
+  res.status(200).json({
+    token,
+    user: {
+      email: user.email,
+      subscription: user.subscription,
+    },
+  });
+});
