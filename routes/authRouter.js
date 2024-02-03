@@ -14,4 +14,4 @@ router.post(
 );
 router.post('/login', validateBody(usersSchema.registerUserSchema), authController.login);
 router.post('/logout', authMiddleware.protect, authController.logout);
-router.post('/current');
+router.post('/current', authMiddleware.protect, authController.currentUser);
