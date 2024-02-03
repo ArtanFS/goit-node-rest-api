@@ -6,14 +6,14 @@ export const signToken = (id) =>
     expiresIn: process.env.JWT_EXPIRES,
   });
 
-// export const checkToken = (token) => {
-//   if (!token) throw new HttpError(401, 'Not logged in..');
+export const checkToken = (token) => {
+  if (!token) throw HttpError(401, 'Not authorized');
 
-//   try {
-//     const { id } = jwt.verify(token, serverConfig.jwtSecret);
+  try {
+    const { id } = jwt.verify(token, process.env.JWT_SECRET);
 
-//     return id;
-//   } catch (err) {
-//     throw new HttpError(401, 'Not logged in..');
-//   }
-// };
+    return id;
+  } catch (err) {
+    throw HttpError(401, 'Not authorized');
+  }
+};

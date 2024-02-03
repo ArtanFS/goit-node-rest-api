@@ -31,3 +31,5 @@ export const checkUserExists = async (filter) => {
 
   if (userExists) throw HttpError(409, 'Email in use');
 };
+
+export const getUserById = (userId) => User.findById(userId);

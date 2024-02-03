@@ -1,6 +1,5 @@
 import { jwtService, usersService } from '../services/index.js';
-import { catchAsync, HttpError, validateBody } from '../helpers/index.js';
-import { usersSchema } from '../schemas/index.js';
+import { catchAsync, HttpError } from '../helpers/index.js';
 
 export const checkRegisterData = catchAsync(async (req, res, next) => {
   await usersService.checkUserExists({ email: req.body.email });
@@ -8,21 +7,21 @@ export const checkRegisterData = catchAsync(async (req, res, next) => {
   next();
 });
 
-// export const protect = catchAsync(async (req, res, next) => {
-//   const token =
-//     req.headers.authorization?.startsWith('Bearer ') && req.headers.authorization.split(' ')[1];
-//   const userId = jwtService.checkToken(token);
+export const protect = catchAsync(async (req, res, next) => {
+  const token =
+    req.headers.authorization?.startsWith('Bearer ') && req.headers.authorization.split(' ')[1];
+  const userId = jwtService.checkToken(token);
 
-//   if (!userId) throw new HttpError(401, 'Not logged in..');
+  if (!userId) throw HttpError(401, 'Not authorized');
 
-//   const currentUser = await userService.getUserById(userId);
+  const currentUser = await usersService.getUserById(userId);
 
-//   if (!currentUser) throw new HttpError(401, 'Not logged in..');
+  if (!currentUser) throw HttpError(401, 'Not authorized');
 
-//   req.user = currentUser;
+  req.user = currentUser;
 
-//   next();
-// });
+  next();
+});
 
 // // roles guard
 // // must be used only after 'protect' middleware

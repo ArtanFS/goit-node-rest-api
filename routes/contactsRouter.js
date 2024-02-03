@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import { contactsController } from '../controllers/index.js';
-import { contactsMiddleware } from '../middlewares/index.js';
+import { authMiddleware, contactsMiddleware } from '../middlewares/index.js';
 import { validateBody } from '../helpers/index.js';
 import { contactsSchema } from '../schemas/index.js';
 
 export const router = Router();
 
+router.use(authMiddleware.protect);
 router
   .route('/')
   .get(contactsController.getAllContacts)
