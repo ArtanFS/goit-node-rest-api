@@ -23,3 +23,11 @@ export const login = catchAsync(async (req, res) => {
     },
   });
 });
+
+export const logout = catchAsync(async (req, res) => {
+  const { _id } = req.user;
+
+  await usersService.logout(_id);
+
+  res.sendStatus(204);
+});

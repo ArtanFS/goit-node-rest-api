@@ -16,21 +16,11 @@ export const protect = catchAsync(async (req, res, next) => {
 
   const currentUser = await usersService.getUserById(userId);
 
-  if (!currentUser) throw HttpError(401, 'Not authorized');
+  if (!currentUser || !currentUser.token || currentUser.token !== token) {
+    throw HttpError(401, 'Not authorized');
+  }
 
   req.user = currentUser;
 
   next();
 });
-
-// // roles guard
-// // must be used only after 'protect' middleware
-// // allowFor('user', 'admin')
-// export const allowFor =
-//   (...roles) =>
-//   (req, res, next) => {
-//     // roles === ['user', 'admin']
-//     if (roles.includes(req.user.role)) return next();
-
-//     next(new HttpError(403, 'You are not allowed to perform this action..'));
-//   };

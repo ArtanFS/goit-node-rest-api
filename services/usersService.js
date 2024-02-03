@@ -23,8 +23,12 @@ export const login = async ({ email, password }) => {
 
   const token = jwtService.signToken(user.id);
 
+  await User.findByIdAndUpdate(user._id, { token });
+
   return { user, token };
 };
+
+export const logout = (id) => User.findByIdAndUpdate(id, { token: '' });
 
 export const checkUserExists = async (filter) => {
   const userExists = await User.exists(filter);
