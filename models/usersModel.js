@@ -6,6 +6,7 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: [true, 'Set password for user'],
+      select: false,
     },
     email: {
       type: String,

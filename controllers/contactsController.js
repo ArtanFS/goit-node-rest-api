@@ -2,9 +2,9 @@ import { catchAsync } from '../helpers/index.js';
 import { contactsService } from '../services/index.js';
 
 export const getAllContacts = catchAsync(async (req, res) => {
-  const contacts = await contactsService.listContacts();
+  const { contacts, total } = await contactsService.listContacts(req.query, req.user);
 
-  res.status(200).json(contacts);
+  res.status(200).json({ total, contacts });
 });
 
 export const getOneContact = catchAsync(async (req, res) => {
@@ -20,7 +20,7 @@ export const deleteContact = catchAsync(async (req, res) => {
 });
 
 export const createContact = catchAsync(async (req, res) => {
-  const newContact = await contactsService.addContact(req.body);
+  const newContact = await contactsService.addContact(req.body, req.user._id);
 
   res.status(201).json(newContact);
 });

@@ -102,7 +102,7 @@ module.exports = {
     'no-var': 'error',
     'no-void': 'error',
     'object-shorthand': 'error',
-    'object-curly-newline': 'warn',
+    'object-curly-newline': ['warn', { minProperties: 5, consistent: true }],
     'one-var': ['error', 'never'],
     'padding-line-between-statements': 'error',
     'prefer-const': 'error',
