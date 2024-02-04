@@ -1,2 +1,2 @@
 export { catchAsync } from './catchAsync.js';
-export { validateBody, HttpError } from './validateBody.js';
+export { validateBody, validateParams, HttpError } from './validate.js';

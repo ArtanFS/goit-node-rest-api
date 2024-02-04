@@ -3,30 +3,21 @@ import { Contact } from '../models/contactsModel.js';
 import { HttpError } from '../helpers/index.js';
 
 export const listContacts = async (query, currentUser) => {
-  // const contacts = await Contact.find()
-  //   .populate({ path: 'owner', select: 'email' })
-  //   .sort('name')
-  //   .skip(3)
-  //   .limit(5);
-
   const filter = query.favorite ? { favorite: query.favorite } : {};
+  const page = query.page ? +query.page : 1;
+  const limit = query.limit ? +query.limit : 100;
+  const contactsToSkip = (page - 1) * limit;
 
-  // if (currentUser.role === userRoles.USER) {
-  //   if (query.search) {
-  //     for (const findOption of findOptions.$or) {
-  //       findOption.owner = currentUser;
-  //     }
-  //   }
+  // filter.owner = currentUser;
 
-  // if (!query.search) findOptions.owner = currentUser;
-  // }
-
-  // INIT DB QUERY ========================
-  const contactsQuery = Contact.find(filter).populate({ path: 'owner', select: 'email' });
+  const contactsQuery = Contact.find(filter)
+    .populate({ path: 'owner', select: 'email' })
+    .sort('name')
+    .skip(contactsToSkip)
+    .limit(limit);
 
   const contacts = await contactsQuery;
-
-  const total = contacts.length;
+  const total = await Contact.countDocuments(filter);
 
   return { contacts, total };
 };
