@@ -8,7 +8,7 @@ export const listContacts = async (query, currentUser) => {
   const limit = query.limit ? +query.limit : 100;
   const contactsToSkip = (page - 1) * limit;
 
-  // filter.owner = currentUser;
+  filter.owner = currentUser;
 
   const contactsQuery = Contact.find(filter)
     .populate({ path: 'owner', select: 'email' })
@@ -18,32 +18,45 @@ export const listContacts = async (query, currentUser) => {
 
   const contacts = await contactsQuery;
   const total = await Contact.countDocuments(filter);
-
   return { contacts, total };
 };
 
-export const getContactById = (contactId) => Contact.findById(contactId);
+export const getContactById = async (contactId, currentUser) => {
+  const contact = await Contact.findOne({ _id: contactId, owner: currentUser });
 
-export const removeContact = (contactId) => Contact.findByIdAndDelete(contactId);
+  if (!contact) throw HttpError(404);
+
+  return contact;
+};
+
+export const removeContact = async (contactId, currentUser) => {
+  const contact = await Contact.findOne({ _id: contactId, owner: currentUser });
+
+  if (!contact) throw HttpError(404);
+
+  return Contact.findByIdAndDelete(contactId);
+};
 
 export const addContact = (contactData, owner) => Contact.create({ ...contactData, owner });
 
-export const updateContact = async (contactId, contactData) => {
-  const updatedContact = await Contact.findByIdAndUpdate(contactId, contactData, {
+export const updateContact = async (contactId, contactData, currentUser) => {
+  const contact = await Contact.findOne({ _id: contactId, owner: currentUser });
+
+  if (!contact) throw HttpError(404);
+
+  return Contact.findByIdAndUpdate(contactId, contactData, {
     new: true,
   });
-
-  return updatedContact;
 };
 
 export const checkContactId = async (contactId) => {
   const isIdValid = Types.ObjectId.isValid(contactId);
 
-  if (!isIdValid) throw HttpError(404, 'Not found');
+  if (!isIdValid) throw HttpError(404);
 
   const contactExists = await Contact.exists({ _id: contactId });
 
-  if (!contactExists) throw HttpError(404, 'Not found');
+  if (!contactExists) throw HttpError(404);
 };
 
 export const checkContactExists = async (filter) => {
