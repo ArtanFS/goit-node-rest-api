@@ -4,7 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 
-import contactsRouter from './routes/contactsRouter.js';
+import { authRouter, contactsRouter } from './routes/index.js';
 
 dotenv.config({
   path: './.env',
@@ -25,6 +25,7 @@ app.use(express.json());
 
 if (process.env.NODE_ENV === 'development') app.use(morgan('tiny'));
 
+app.use('/api/users', authRouter);
 app.use('/api/contacts', contactsRouter);
 
 app.use((_, res) => {

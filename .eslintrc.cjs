@@ -10,6 +10,7 @@ module.exports = {
   extends: ['airbnb-base', 'eslint:recommended'],
   plugins: [],
   rules: {
+    'operator-linebreak': 'off',
     'class-methods-use-this': 'off',
     'array-bracket-newline': 'off',
     'array-element-newline': 'off',
@@ -101,7 +102,7 @@ module.exports = {
     'no-var': 'error',
     'no-void': 'error',
     'object-shorthand': 'error',
-    'object-curly-newline': 'warn',
+    'object-curly-newline': ['warn', { minProperties: 5, consistent: true }],
     'one-var': ['error', 'never'],
     'padding-line-between-statements': 'error',
     'prefer-const': 'error',
@@ -120,7 +121,7 @@ module.exports = {
     'space-before-function-paren': [
       'error',
       {
-        anonymous: 'never',
+        anonymous: 'always',
         asyncArrow: 'always',
         named: 'never',
       },

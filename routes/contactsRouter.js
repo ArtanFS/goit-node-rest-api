@@ -1,38 +1,33 @@
 import { Router } from 'express';
-import {
-  createContact,
-  deleteContact,
-  getAllContacts,
-  getOneContact,
-  updateContact,
-} from '../controllers/contactsController.js';
-import {
-  checkCreateUserData,
-  checkUpdateUserData,
-  checkUserId,
-} from '../middlewares/contactsMiddleware.js';
-import validateBody from '../helpers/validateBody.js';
-import {
-  createContactSchema,
-  updateContactSchema,
-  updateStatusSchema,
-} from '../schemas/contactsSchema.js';
+import { contactsController } from '../controllers/index.js';
+import { authMiddleware, contactsMiddleware } from '../middlewares/index.js';
+import { validateBody, validateParams } from '../helpers/index.js';
+import { contactsSchema, requestSchema } from '../schemas/index.js';
 
-const contactsRouter = Router();
+export const router = Router();
 
-contactsRouter
+router.use(authMiddleware.protect);
+router
   .route('/')
-  .get(getAllContacts)
-  .post(validateBody(createContactSchema), checkCreateUserData, createContact);
+  .get(validateParams(requestSchema.requestParamsSchema), contactsController.getAllContacts)
+  .post(
+    validateBody(contactsSchema.createContactSchema),
+    contactsMiddleware.checkCreateContactData,
+    contactsController.createContact
+  );
 
-contactsRouter.use('/:id', checkUserId);
+router.use('/:id', contactsMiddleware.checkContactId);
 
-contactsRouter
+router
   .route('/:id')
-  .get(getOneContact)
-  .delete(deleteContact)
-  .put(validateBody(updateContactSchema), checkUpdateUserData, updateContact);
+  .get(contactsController.getOneContact)
+  .delete(contactsController.deleteContact)
+  .put(
+    validateBody(contactsSchema.updateContactSchema),
+    contactsMiddleware.checkUpdateContactData,
+    contactsController.updateContact
+  );
 
-contactsRouter.route('/:id/favorite').patch(validateBody(updateStatusSchema), updateContact);
-
-export default contactsRouter;
+router
+  .route('/:id/favorite')
+  .patch(validateBody(contactsSchema.updateStatusSchema), contactsController.updateContact);
