@@ -30,23 +30,27 @@ export const getContactById = async (contactId, currentUser) => {
 };
 
 export const removeContact = async (contactId, currentUser) => {
-  const contact = await Contact.findOne({ _id: contactId, owner: currentUser });
+  const removedContact = await Contact.findOneAndDelete({ _id: contactId, owner: currentUser });
 
-  if (!contact) throw HttpError(404);
+  if (!removedContact) throw HttpError(404);
 
-  return Contact.findByIdAndDelete(contactId);
+  return removedContact;
 };
 
 export const addContact = (contactData, owner) => Contact.create({ ...contactData, owner });
 
 export const updateContact = async (contactId, contactData, currentUser) => {
-  const contact = await Contact.findOne({ _id: contactId, owner: currentUser });
+  const updatedContact = await Contact.findOneAndUpdate(
+    { _id: contactId, owner: currentUser },
+    contactData,
+    {
+      new: true,
+    }
+  );
 
-  if (!contact) throw HttpError(404);
+  if (!updatedContact) throw HttpError(404);
 
-  return Contact.findByIdAndUpdate(contactId, contactData, {
-    new: true,
-  });
+  return updatedContact;
 };
 
 export const checkContactId = async (contactId) => {
