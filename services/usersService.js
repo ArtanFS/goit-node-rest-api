@@ -1,3 +1,6 @@
+import Jimp from 'jimp';
+import path from 'path';
+import fs from 'fs/promises';
 import { User } from '../models/usersModel.js';
 import { HttpError } from '../helpers/index.js';
 import * as jwtService from './jwtService.js';
@@ -17,7 +20,7 @@ export const login = async ({ email, password }) => {
 
   const isPasswordValid = await user.checkPassword(password, user.password);
 
-  if (!isPasswordValid) throw HttpError(401, 'Email or password is wrong');
+  if (!isPasswordValid) throw HttpError(400, 'Email or password is wrong');
 
   user.password = undefined;
 
@@ -37,3 +40,20 @@ export const checkUserExists = async (filter) => {
 };
 
 export const getUserById = (userId) => User.findById(userId);
+
+export const updateUser = async (user, file) => {
+  if (!file) throw HttpError(400, 'Please, select image file');
+
+  const uploadFilePath = path.join(process.cwd(), file.path);
+  const avatarPath = path.join('avatars', user.id, file.filename);
+  const fullDownloadFilePath = path.join(process.cwd(), 'public', avatarPath);
+
+  const avatar = await Jimp.read(uploadFilePath);
+  await avatar.cover(250, 250).quality(90).writeAsync(fullDownloadFilePath);
+
+  await fs.unlink(uploadFilePath);
+
+  user.avatarURL = avatarPath;
+
+  return user.save();
+};

@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { authMiddleware } from '../middlewares/index.js';
-import { authController } from '../controllers/index.js';
+import { authMiddleware, userMiddleware } from '../middlewares/index.js';
+import { authController, userController } from '../controllers/index.js';
 import { validateBody } from '../helpers/index.js';
 import { usersSchema } from '../schemas/index.js';
 
@@ -13,5 +13,7 @@ router.post(
   authController.register
 );
 router.post('/login', validateBody(usersSchema.registerUserSchema), authController.login);
-router.post('/logout', authMiddleware.protect, authController.logout);
-router.get('/current', authMiddleware.protect, authController.currentUser);
+router.use(authMiddleware.protect);
+router.post('/logout', authController.logout);
+router.get('/current', authController.currentUser);
+router.patch('/avatars', userMiddleware.uploadAvatar, userController.updateUserAvatar);
