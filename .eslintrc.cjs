@@ -2,13 +2,14 @@ module.exports = {
   env: {
     es6: true,
     node: true,
+    jest: true,
   },
   globals: {},
   parserOptions: {
     ecmaVersion: 2020,
   },
-  extends: ['airbnb-base', 'eslint:recommended'],
-  plugins: [],
+  extends: ['airbnb-base', 'eslint:recommended', 'plugin:jest/recommended'],
+  plugins: ['jest'],
   rules: {
     'operator-linebreak': 'off',
     'class-methods-use-this': 'off',
