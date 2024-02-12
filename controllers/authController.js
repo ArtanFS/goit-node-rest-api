@@ -8,6 +8,7 @@ export const register = catchAsync(async (req, res) => {
     user: {
       email: user.email,
       subscription: user.subscription,
+      avatarURL: user.avatarURL,
     },
   });
 });
