@@ -1,16 +1,17 @@
 import jwt from 'jsonwebtoken';
 import { HttpError } from '../helpers/index.js';
+import { serverConfig } from '../configs/index.js';
 
 export const signToken = (id) =>
-  jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES,
+  jwt.sign({ id }, serverConfig.jwtSecret, {
+    expiresIn: serverConfig.jwtExpiresIn,
   });
 
 export const checkToken = (token) => {
   if (!token) throw HttpError(401, 'Not authorized');
 
   try {
-    const { id } = jwt.verify(token, process.env.JWT_SECRET);
+    const { id } = jwt.verify(token, serverConfig.jwtSecret);
 
     return id;
   } catch (err) {

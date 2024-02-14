@@ -1,6 +1,7 @@
 import { model, Schema } from 'mongoose';
 import { compare, genSalt, hash } from 'bcrypt';
 import gravatar from 'gravatar';
+import { v4 } from 'uuid';
 
 const userSchema = new Schema(
   {
@@ -21,6 +22,11 @@ const userSchema = new Schema(
       default: 'starter',
     },
     token: { type: String, default: '' },
+    verify: { type: Boolean, default: false },
+    verificationToken: {
+      type: String,
+      default: '',
+    },
   },
   {
     versionKey: false,
@@ -28,7 +34,10 @@ const userSchema = new Schema(
 );
 
 userSchema.pre('save', async function (next) {
-  if (this.isNew) this.avatarURL = gravatar.url(this.email, { s: '250', d: 'identicon' }, true);
+  if (this.isNew) {
+    this.avatarURL = gravatar.url(this.email, { s: '250', d: 'identicon' }, true);
+    this.verificationToken = v4();
+  }
 
   if (!this.isModified('password')) return next();
 
