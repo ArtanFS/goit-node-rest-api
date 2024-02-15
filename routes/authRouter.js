@@ -13,6 +13,7 @@ router.post(
   authController.register
 );
 router.get('/verify/:verificationToken', authController.verifyEmail);
+router.post('/verify', validateBody(usersSchema.emailSchema), authController.resendVerifyEmail);
 router.post('/login', validateBody(usersSchema.registerUserSchema), authController.login);
 router.use(authMiddleware.protect);
 router.post('/logout', authController.logout);

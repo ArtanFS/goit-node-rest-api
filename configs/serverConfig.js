@@ -15,5 +15,3 @@ export const serverConfig = {
   emailFrom: process.env.SEND_EMAIL_FROM,
   baseUrl: process.env.BASE_URL,
 };
-
-console.log(serverConfig.baseUrl);

@@ -7,11 +7,12 @@ import { signToken } from './jwtService.js';
 import { sendEmail } from './emailService.js';
 import { serverConfig } from '../configs/index.js';
 
+const { baseUrl, port } = serverConfig;
+
 export const register = async (userData) => {
   const newUser = await User.create(userData);
 
   const { email, verificationToken } = newUser;
-  const { baseUrl, port } = serverConfig;
 
   newUser.password = undefined;
 
@@ -80,4 +81,21 @@ export const verifyEmail = async (verificationToken) => {
   if (!user) throw HttpError(404, 'User not found');
 
   await User.findByIdAndUpdate(user._id, { verify: true, verificationToken: null });
+};
+
+export const resendVerifyEmail = async (email) => {
+  const user = await User.findOne({ email });
+
+  if (!user) throw HttpError(404, 'User not found');
+
+  if (user.verify) throw HttpError(400, 'Verification has already been passed');
+
+  const verificationEmail = {
+    to: email,
+    subject: 'Verification message',
+    text: `Go ${baseUrl}${port}/api/users/verify/${user.verificationToken} to verify email`,
+    html: `<a href="${baseUrl}${port}/api/users/verify/${user.verificationToken}" target"_blank">Click to verify email</a>`,
+  };
+
+  await sendEmail(verificationEmail);
 };

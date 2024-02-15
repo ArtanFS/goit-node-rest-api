@@ -5,3 +5,7 @@ export const registerUserSchema = Joi.object({
   password: Joi.string().regex(PASSWD_REGEX).required(),
   email: Joi.string().email().required(),
 }).options({ abortEarly: false });
+
+export const emailSchema = Joi.object({
+  email: Joi.string().email().required(),
+}).options({ abortEarly: false });

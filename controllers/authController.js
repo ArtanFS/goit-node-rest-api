@@ -20,6 +20,13 @@ export const verifyEmail = catchAsync(async (req, res) => {
   res.status(200).json({ message: 'Verification successful' });
 });
 
+export const resendVerifyEmail = catchAsync(async (req, res) => {
+  const { email } = req.body;
+  await usersService.resendVerifyEmail(email);
+
+  res.status(200).json({ message: 'Verification email sent' });
+});
+
 export const login = catchAsync(async (req, res) => {
   const { user, token } = await usersService.login(req.body);
 
