@@ -13,4 +13,7 @@ export const serverConfig = {
   jwtExpiresIn: process.env.JWT_EXPIRES ?? '15m',
   emailServiceAPI: process.env.SENDGRID_API_KEY,
   emailFrom: process.env.SEND_EMAIL_FROM,
+  baseUrl: process.env.BASE_URL,
 };
+
+console.log(serverConfig.baseUrl);

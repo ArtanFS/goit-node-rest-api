@@ -3,12 +3,26 @@ import path from 'path';
 import fs from 'fs/promises';
 import { User } from '../models/usersModel.js';
 import { HttpError } from '../helpers/index.js';
-import * as jwtService from './jwtService.js';
+import { signToken } from './jwtService.js';
+import { sendEmail } from './emailService.js';
+import { serverConfig } from '../configs/index.js';
 
 export const register = async (userData) => {
   const newUser = await User.create(userData);
 
+  const { email, verificationToken } = newUser;
+  const { baseUrl, port } = serverConfig;
+
   newUser.password = undefined;
+
+  const verificationEmail = {
+    to: email,
+    subject: 'Verification message',
+    text: `Go ${baseUrl}${port}/api/users/verify/${verificationToken} to verify email`,
+    html: `<a href="${baseUrl}${port}/api/users/verify/${verificationToken}" target"_blank">Click to verify email</a>`,
+  };
+
+  await sendEmail(verificationEmail);
 
   return newUser;
 };
@@ -18,13 +32,15 @@ export const login = async ({ email, password }) => {
 
   if (!user) throw HttpError(401, 'Email or password is wrong');
 
+  if (!user.verify) throw HttpError(401, 'Email not verified');
+
   const isPasswordValid = await user.checkPassword(password, user.password);
 
   if (!isPasswordValid) throw HttpError(400, 'Email or password is wrong');
 
   user.password = undefined;
 
-  const token = jwtService.signToken(user.id);
+  const token = signToken(user.id);
 
   await User.findByIdAndUpdate(user._id, { token });
 
@@ -56,4 +72,12 @@ export const updateUser = async (user, file) => {
   user.avatarURL = avatarPath;
 
   return user.save();
+};
+
+export const verifyEmail = async (verificationToken) => {
+  const user = await User.findOne({ verificationToken });
+
+  if (!user) throw HttpError(404, 'User not found');
+
+  await User.findByIdAndUpdate(user._id, { verify: true, verificationToken: null });
 };

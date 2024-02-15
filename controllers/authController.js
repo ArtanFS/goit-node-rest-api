@@ -1,17 +1,8 @@
-import { sendEmail, usersService } from '../services/index.js';
+import { usersService } from '../services/index.js';
 import { catchAsync } from '../helpers/index.js';
 
 export const register = catchAsync(async (req, res) => {
   const { email, subscription, avatarURL } = await usersService.register(req.body);
-
-  const verifyEmail = {
-    to: email,
-    subject: 'Verification message',
-    text: 'Verification code',
-    html: '<strong>Verification code</strong>',
-  };
-
-  await sendEmail(verifyEmail);
 
   res.status(201).json({
     user: {
@@ -20,6 +11,13 @@ export const register = catchAsync(async (req, res) => {
       avatarURL,
     },
   });
+});
+
+export const verifyEmail = catchAsync(async (req, res) => {
+  const { verificationToken } = req.params;
+  await usersService.verifyEmail(verificationToken);
+
+  res.status(200).json({ message: 'Verification successful' });
 });
 
 export const login = catchAsync(async (req, res) => {
